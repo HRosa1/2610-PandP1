@@ -143,11 +143,13 @@
     <ClCompile Include="Catalog.cpp" />
     <ClCompile Include="Cos1 Project.cpp" />
     <ClCompile Include="Member.cpp" />
+    <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
     <ClInclude Include="Catalog.h" />
     <ClInclude Include="Member.h" />
+    <ClInclude Include="Menu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
