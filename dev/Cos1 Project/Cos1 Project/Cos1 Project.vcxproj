@@ -142,12 +142,14 @@
     <ClCompile Include="Book.cpp" />
     <ClCompile Include="Catalog.cpp" />
     <ClCompile Include="Cos1 Project.cpp" />
+    <ClCompile Include="Loan.cpp" />
     <ClCompile Include="Member.cpp" />
     <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
     <ClInclude Include="Catalog.h" />
+    <ClInclude Include="Loan.h" />
     <ClInclude Include="Member.h" />
     <ClInclude Include="Menu.h" />
   </ItemGroup>
