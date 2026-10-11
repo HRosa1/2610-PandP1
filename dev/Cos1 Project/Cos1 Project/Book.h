@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <iostream>
 
 class Book
 {
@@ -11,22 +10,13 @@ private:
     bool available;
 
 public:
-    Book(std::string _title, std::string _author, std::string _isbn)
-        : title(_title), author(_author), isbn(_isbn), available(true)
-    {
-    }
+    Book(const std::string& _title, const std::string& _author, const std::string& _isbn);
 
-    void display() const {
-        std::cout << title << " by " << author
-            << " (ISBN: " << isbn << ") - "
-            << (available ? "Available" : "Checked Out") << std::endl;
-    }
+    void display() const;
 
-    std::string getTitle() const { return title; }
-
-    std::string getAuthor() const { return author; }
-
-    bool isAvailable() const { return available; }
-
-    void setAvailable(bool val) { available = val; }
+    std::string getTitle() const;
+    std::string getAuthor() const;
+    std::string getISBN() const;
+    bool isAvailable() const;
+    void setAvailable(bool val);
 };

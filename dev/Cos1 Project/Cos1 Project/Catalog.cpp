@@ -8,24 +8,22 @@ void Catalog::addBook(const Book& book)
 
 void Catalog::removeBook(int index)
 {
-    if (index >= 0 && index < books.size())
-    {
-        books.erase(books.begin() + index);
-        std::cout << "Book removed." << std::endl;
-    }
-    else
+    if (index < 0 || static_cast<size_t>(index) >= books.size())
     {
         std::cout << "Invalid index." << std::endl;
+        return;
     }
+    books.erase(books.begin() + index);
+    std::cout << "Book removed." << std::endl;
 }
 
 int Catalog::searchByTitle(const std::string& title) const
 {
-    for (int i = 0; i < books.size(); i++)
+    for (size_t i = 0; i < books.size(); i++)
     {
         if (books[i].getTitle() == title)
         {
-            return i;
+            return static_cast<int>(i);
         }
     }
     return -1;
@@ -33,11 +31,11 @@ int Catalog::searchByTitle(const std::string& title) const
 
 int Catalog::searchByAuthor(const std::string& author) const
 {
-    for (int i = 0; i < books.size(); i++)
+    for (size_t i = 0; i < books.size(); i++)
     {
         if (books[i].getAuthor() == author)
         {
-            return i;
+            return static_cast<int>(i);
         }
     }
     return -1;
@@ -50,9 +48,16 @@ void Catalog::displayAll() const
         std::cout << "Catalog is empty." << std::endl;
         return;
     }
-    for (int i = 0; i < books.size(); i++)
+    for (size_t i = 0; i < books.size(); i++)
     {
         std::cout << i + 1 << ". ";
         books[i].display();
     }
 }
+
+Book& Catalog::getBook(int index)
+{
+    return books[index];
+}
+
+int Catalog::getCount() const { return static_cast<int>(books.size()); }

@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Catalog.h"
 #include "Menu.h"
-#include "Loan.h"
 
 int main()
 {

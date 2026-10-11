@@ -1,26 +1,27 @@
 #include "Member.h"
+#include <iostream>
 
-Member::Member(int _id, std::string _name)
+Member::Member(int _id, const std::string& _name)
     : id(_id), name(_name)
 {
 }
 
 int Member::getId() const { return id; }
-
 std::string Member::getName() const { return name; }
 
-void Member::checkOut(const std::string& bookTitle)
+void Member::checkOut(const Loan& loan)
 {
-    checkedOut.push_back(bookTitle);
+    loans.push_back(loan);
+    std::cout << "Book checked out." << std::endl;
 }
 
 void Member::returnBook(const std::string& bookTitle)
 {
-    for (int i = 0; i < checkedOut.size(); i++)
+    for (size_t i = 0; i < loans.size(); i++)
     {
-        if (checkedOut[i] == bookTitle)
+        if (loans[i].getBookTitle() == bookTitle)
         {
-            checkedOut.erase(checkedOut.begin() + i);
+            loans.erase(loans.begin() + static_cast<int>(i));
             std::cout << "Book returned." << std::endl;
             return;
         }
@@ -28,14 +29,18 @@ void Member::returnBook(const std::string& bookTitle)
     std::cout << "That book is not checked out to this member." << std::endl;
 }
 
-void Member::displayLoans() const
+void Member::displayLoans(int todayDay, int todayMonth, int todayYear) const
 {
     std::cout << name << " (ID: " << id << ") has "
-        << checkedOut.size() << " book(s) out:" << std::endl;
-    for (int i = 0; i < checkedOut.size(); i++)
+        << loans.size() << " book(s) out:" << std::endl;
+    for (size_t i = 0; i < loans.size(); i++)
     {
-        std::cout << "  - " << checkedOut[i] << std::endl;
+        loans[i].display();
+        if (loans[i].isOverdue(todayDay, todayMonth, todayYear))
+        {
+            std::cout << "    ** OVERDUE **" << std::endl;
+        }
     }
 }
 
-int Member::getLoanCount() const { return checkedOut.size(); }
+int Member::getLoanCount() const { return static_cast<int>(loans.size()); }

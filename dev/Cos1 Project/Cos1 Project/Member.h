@@ -1,23 +1,23 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <iostream>
+#include "Loan.h"
 
 class Member
 {
 private:
     int id;
     std::string name;
-    std::vector<std::string> checkedOut;
+    std::vector<Loan> loans;
 
 public:
-    Member(int _id, std::string _name);
+    Member(int _id, const std::string& _name);
 
     int getId() const;
     std::string getName() const;
 
-    void checkOut(const std::string& bookTitle);
+    void checkOut(const Loan& loan);
     void returnBook(const std::string& bookTitle);
-    void displayLoans() const;
+    void displayLoans(int todayDay, int todayMonth, int todayYear) const;
     int getLoanCount() const;
 };
