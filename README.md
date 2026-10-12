@@ -32,8 +32,13 @@ Get the menu loop compiling, implement "Add Book" and "List Books," and make sur
 
 ### Week 2
 
-My next stand up will go here...
+For this week I focused on building out the core loan system for Book Track. I implemented the full checkout flow (search book → confirm availability → select member → create Loan with due date → mark book unavailable) and the matching return flow. I added the Loan class with a 14-day due date that handles month and year rollover, plus an `isOverdue` check. I also added input validation across all menu options using `readInt` and `readString` helper functions.
 
+The main obstacle was keeping three separate data stores consistent: the Book's `available` flag, the Member's `loans` vector, and the Loan record itself. During checkout, all three need to update in the correct order or the system falls out of sync (e.g., a book shows as available but the member still has it listed as a loan). I addressed this by handling all state changes within a single menu option block so the updates happen together, and by adding explicit checks (is the book already checked out? does the member actually have this book?) before making any changes.
+
+I've been getting comfortable working with references and pointers in a multi-class project. Using `Book& getBook(int index)` to return a reference so I can modify availability without copying the object, and using `Member* findMember(int id)` to look up a member and then call methods on the result with `->`, were both new patterns for me. I also learned how `cin.clear()` and `cin.ignore()` work together to recover the input stream after bad input, which was the key to making the validation loop actually function.
+
+Before Week 3 I plan to add fine calculation on return (displaying the total owed when an overdue book comes back), add a "View all overdue" option to the main menu so you can see every late loan at a glance, and run through a full test pass of invalid input on every menu option to make sure nothing crashes. After that I'll start thinking about how to persist data to a file so the catalog doesn't reset when the program closes. I also plan on replacing the manual member ID entry with an automatic 5-digit ID generation. I will also be adding suggestions from my peers to make sure I am taking their feedback into consideration.
 ### Week 3
 
 Stay tuned, this stand up is coming soon...
