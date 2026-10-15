@@ -1,8 +1,9 @@
 #include "Member.h"
 #include <iostream>
+#include <iomanip>
 
-Member::Member(int _id, const std::string& _name)
-    : id(_id), name(_name)
+Member::Member(int id, const std::string& name)
+    : id(id), name(name)
 {
 }
 
@@ -12,35 +13,45 @@ std::string Member::getName() const { return name; }
 void Member::checkOut(const Loan& loan)
 {
     loans.push_back(loan);
-    std::cout << "Book checked out." << std::endl;
 }
 
-void Member::returnBook(const std::string& bookTitle)
+bool Member::returnBook(const std::string& bookTitle)
 {
-    for (size_t i = 0; i < loans.size(); i++)
+    for (auto it = loans.begin(); it != loans.end(); ++it)
     {
-        if (loans[i].getBookTitle() == bookTitle)
+        if (it->getBookTitle() == bookTitle)
         {
-            loans.erase(loans.begin() + static_cast<int>(i));
-            std::cout << "Book returned." << std::endl;
-            return;
+            loans.erase(it);
+            return true;
         }
     }
-    std::cout << "That book is not checked out to this member." << std::endl;
+    return false;
 }
 
 void Member::displayLoans(int todayDay, int todayMonth, int todayYear) const
 {
     std::cout << name << " (ID: " << id << ") has "
         << loans.size() << " book(s) out:" << std::endl;
-    for (size_t i = 0; i < loans.size(); i++)
+
+    double totalFines = 0.0;
+
+    for (const auto& loan : loans)
     {
-        loans[i].display();
-        if (loans[i].isOverdue(todayDay, todayMonth, todayYear))
+        loan.display();
+        int days = loan.daysOverdue(todayDay, todayMonth, todayYear);
+        if (days > 0)
         {
-            std::cout << "    ** OVERDUE **" << std::endl;
+            double fine = loan.getFine(todayDay, todayMonth, todayYear);
+            totalFines += fine;
+            std::cout << "    ** OVERDUE by " << days
+                << " day(s) | Fine: $" << std::fixed
+                << std::setprecision(2) << fine << "**" << std::endl;
         }
     }
+
+    if (totalFines > 0.0)
+        std::cout << "Total outstanding fines: $" << std::fixed
+        << std::setprecision(2) << totalFines << std::endl;
 }
 
 int Member::getLoanCount() const { return static_cast<int>(loans.size()); }

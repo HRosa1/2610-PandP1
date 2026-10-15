@@ -6,7 +6,6 @@ int main()
 {
     Catalog catalog;
     Menu menu(catalog);
-
     menu.run();
     return 0;
 }

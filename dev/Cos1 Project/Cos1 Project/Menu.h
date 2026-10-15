@@ -14,7 +14,13 @@ private:
     std::string readString(const std::string& prompt);
     Member* findMember(int id);
 
+    void handleAddBook();
+    void handleSearch();
+    void handleCheckout();
+    void handleReturn();
+    void handleShowLoans();
+
 public:
-    Menu(Catalog& _catalog);
+    explicit Menu(Catalog& catalog);
     void run();
 };

@@ -13,6 +13,7 @@ public:
     void removeBook(int index);
     int searchByTitle(const std::string& title) const;
     int searchByAuthor(const std::string& author) const;
+    int searchByISBN(const std::string& isbn) const;
     void displayAll() const;
     Book& getBook(int index);
     int getCount() const;

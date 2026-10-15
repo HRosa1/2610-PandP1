@@ -1,5 +1,6 @@
 #include "Catalog.h"
 #include <iostream>
+#include <stdexcept>
 
 void Catalog::addBook(const Book& book)
 {
@@ -9,12 +10,8 @@ void Catalog::addBook(const Book& book)
 void Catalog::removeBook(int index)
 {
     if (index < 0 || static_cast<size_t>(index) >= books.size())
-    {
-        std::cout << "Invalid index." << std::endl;
         return;
-    }
     books.erase(books.begin() + index);
-    std::cout << "Book removed." << std::endl;
 }
 
 int Catalog::searchByTitle(const std::string& title) const
@@ -22,9 +19,7 @@ int Catalog::searchByTitle(const std::string& title) const
     for (size_t i = 0; i < books.size(); i++)
     {
         if (books[i].getTitle() == title)
-        {
             return static_cast<int>(i);
-        }
     }
     return -1;
 }
@@ -34,9 +29,17 @@ int Catalog::searchByAuthor(const std::string& author) const
     for (size_t i = 0; i < books.size(); i++)
     {
         if (books[i].getAuthor() == author)
-        {
             return static_cast<int>(i);
-        }
+    }
+    return -1;
+}
+
+int Catalog::searchByISBN(const std::string& isbn) const
+{
+    for (size_t i = 0; i < books.size(); i++)
+    {
+        if (books[i].getISBN() == isbn)
+            return static_cast<int>(i);
     }
     return -1;
 }
@@ -57,6 +60,8 @@ void Catalog::displayAll() const
 
 Book& Catalog::getBook(int index)
 {
+    if (index < 0 || static_cast<size_t>(index) >= books.size())
+        throw std::out_of_range("Invalid book index");
     return books[index];
 }
 

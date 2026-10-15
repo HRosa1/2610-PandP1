@@ -11,13 +11,13 @@ private:
     std::vector<Loan> loans;
 
 public:
-    Member(int _id, const std::string& _name);
+    Member(int id, const std::string& name);
 
     int getId() const;
     std::string getName() const;
 
     void checkOut(const Loan& loan);
-    void returnBook(const std::string& bookTitle);
+    bool returnBook(const std::string& bookTitle);
     void displayLoans(int todayDay, int todayMonth, int todayYear) const;
     int getLoanCount() const;
 };
