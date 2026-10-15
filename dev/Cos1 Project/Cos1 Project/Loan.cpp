@@ -1,16 +1,23 @@
 #include "Loan.h"
 #include <iostream>
 
+static bool isLeapYear(int y)
+{
+    return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+}
+
+static int daysInMonth(int month, int year)
+{
+    static const int base[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+    if (month == 2 && isLeapYear(year)) return 29;
+    return base[month - 1];
+}
+
 static int toAbsoluteDays(int d, int m, int y)
 {
     static const int mdays[] = { 0,31,59,90,120,151,181,212,243,273,304,334 };
-    return y * 365 + mdays[m - 1] + d;
-}
-
-static int daysInMonth(int month)
-{
-    static const int base[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
-    return base[month - 1];
+    int leap = (m > 2 && isLeapYear(y)) ? 1 : 0;
+    return y * 365 + y / 4 - y / 100 + y / 400 + mdays[m - 1] + leap + d;
 }
 
 Loan::Loan(const std::string& bookTitle, int memberId,
@@ -19,9 +26,9 @@ Loan::Loan(const std::string& bookTitle, int memberId,
     checkoutDay(day), checkoutMonth(month), checkoutYear(year),
     dueDay(day + LOAN_DAYS), dueMonth(month), dueYear(year)
 {
-    while (dueDay > daysInMonth(dueMonth))
+    while (dueDay > daysInMonth(dueMonth, dueYear))
     {
-        dueDay -= daysInMonth(dueMonth);
+        dueDay -= daysInMonth(dueMonth, dueYear);
         dueMonth++;
         if (dueMonth > 12)
         {

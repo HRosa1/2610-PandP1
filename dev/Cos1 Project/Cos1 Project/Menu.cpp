@@ -2,6 +2,9 @@
 #include "Book.h"
 #include "Loan.h"
 #include <iostream>
+#include <string>
+#include <vector>
+#include <stdexcept>
 
 Menu::Menu(Catalog& catalog) : catalog(catalog)
 {
@@ -9,18 +12,23 @@ Menu::Menu(Catalog& catalog) : catalog(catalog)
 
 int Menu::readInt(const std::string& prompt)
 {
-    int value;
     while (true)
     {
         std::cout << prompt;
-        if (std::cin >> value)
+        std::string input;
+        std::getline(std::cin, input);
+        try
         {
-            std::cin.ignore(10000, '\n');
+            size_t pos;
+            int value = std::stoi(input, &pos);
+            if (pos != input.size())
+                throw std::invalid_argument("trailing characters");
             return value;
         }
-        std::cin.clear();
-        std::cin.ignore(10000, '\n');
-        std::cout << "Please enter a valid number." << std::endl;
+        catch (const std::exception&)
+        {
+            std::cout << "Please enter a valid number." << std::endl;
+        }
     }
 }
 
@@ -34,6 +42,13 @@ std::string Menu::readString(const std::string& prompt)
         if (!value.empty()) return value;
         std::cout << "Input cannot be empty." << std::endl;
     }
+}
+
+bool Menu::validateDate(int day, int month, int year)
+{
+    if (year < 2000 || month < 1 || month > 12 || day < 1 || day > 31)
+        return false;
+    return true;
 }
 
 Member* Menu::findMember(int id)
@@ -81,6 +96,26 @@ void Menu::handleSearch()
     }
 }
 
+void Menu::handleRemoveBook()
+{
+    int index = readInt("Book number to remove: ");
+    if (index < 1 || index > catalog.getCount())
+    {
+        std::cout << "Invalid book number." << std::endl;
+        return;
+    }
+
+    Book& book = catalog.getBook(index - 1);
+    if (!book.isAvailable())
+    {
+        std::cout << "Cannot remove a book that is currently checked out." << std::endl;
+        return;
+    }
+
+    catalog.removeBook(index - 1);
+    std::cout << "Book removed." << std::endl;
+}
+
 void Menu::handleCheckout()
 {
     int memberId = readInt("Member ID: ");
@@ -108,6 +143,12 @@ void Menu::handleCheckout()
     int day = readInt("Checkout day: ");
     int month = readInt("Checkout month: ");
     int year = readInt("Checkout year: ");
+
+    if (!validateDate(day, month, year))
+    {
+        std::cout << "Invalid date. Please use a valid day (1-31), month (1-12), year (2000+)." << std::endl;
+        return;
+    }
 
     Loan loan(book.getTitle(), memberId, day, month, year);
     member->checkOut(loan);
@@ -157,6 +198,13 @@ void Menu::handleShowLoans()
     int day = readInt("Today's day: ");
     int month = readInt("Today's month: ");
     int year = readInt("Today's year: ");
+
+    if (!validateDate(day, month, year))
+    {
+        std::cout << "Invalid date." << std::endl;
+        return;
+    }
+
     member->displayLoans(day, month, year);
 }
 
@@ -185,13 +233,7 @@ void Menu::run()
         case 1:  handleAddBook(); break;
         case 2:  catalog.displayAll(); break;
         case 3:  handleSearch(); break;
-        case 4:
-        {
-            int index = readInt("Book number to remove: ");
-            catalog.removeBook(index - 1);
-            std::cout << "Book removed." << std::endl;
-            break;
-        }
+        case 4:  handleRemoveBook(); break;
         case 5:
         {
             int id = readInt("Member ID: ");
