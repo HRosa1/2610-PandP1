@@ -12,20 +12,33 @@ std::string Member::getName() const { return name; }
 
 void Member::checkOut(const Loan& loan)
 {
+    for (const auto& l : loans)
+        if (l.getBookISBN() == loan.getBookISBN()) return;
     loans.push_back(loan);
 }
 
-bool Member::returnBook(const std::string& bookTitle)
+bool Member::returnBook(const std::string& bookISBN)
 {
     for (auto it = loans.begin(); it != loans.end(); ++it)
     {
-        if (it->getBookTitle() == bookTitle)
+        if (it->getBookISBN() == bookISBN)
         {
             loans.erase(it);
             return true;
         }
     }
     return false;
+}
+
+double Member::getFineForBook(const std::string& bookISBN,
+    int todayDay, int todayMonth, int todayYear) const
+{
+    for (const auto& loan : loans)
+    {
+        if (loan.getBookISBN() == bookISBN)
+            return loan.getFine(todayDay, todayMonth, todayYear);
+    }
+    return 0.0;
 }
 
 void Member::displayLoans(int todayDay, int todayMonth, int todayYear) const

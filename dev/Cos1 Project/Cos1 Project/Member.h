@@ -17,7 +17,9 @@ public:
     std::string getName() const;
 
     void checkOut(const Loan& loan);
-    bool returnBook(const std::string& bookTitle);
+    bool returnBook(const std::string& bookISBN);
+    double getFineForBook(const std::string& bookISBN,
+        int todayDay, int todayMonth, int todayYear) const;
     void displayLoans(int todayDay, int todayMonth, int todayYear) const;
     int getLoanCount() const;
 };
