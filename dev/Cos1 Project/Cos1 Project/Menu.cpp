@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <iomanip>
 
 Menu::Menu(Catalog& catalog) : catalog(catalog)
 {
@@ -46,9 +47,17 @@ std::string Menu::readString(const std::string& prompt)
 
 bool Menu::validateDate(int day, int month, int year)
 {
-    if (year < 2000 || month < 1 || month > 12 || day < 1 || day > 31)
+    if (year < 2000 || month < 1 || month > 12 || day < 1)
         return false;
-    return true;
+
+    static const int base[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+    int maxDay = base[month - 1];
+    if (month == 2)
+    {
+        bool leap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+        if (leap) maxDay = 29;
+    }
+    return day <= maxDay;
 }
 
 Member* Menu::findMember(int id)
@@ -146,11 +155,11 @@ void Menu::handleCheckout()
 
     if (!validateDate(day, month, year))
     {
-        std::cout << "Invalid date. Please use a valid day (1-31), month (1-12), year (2000+)." << std::endl;
+        std::cout << "Invalid date." << std::endl;
         return;
     }
 
-    Loan loan(book.getTitle(), memberId, day, month, year);
+    Loan loan(book.getISBN(), memberId, day, month, year);
     member->checkOut(loan);
     book.setAvailable(false);
     std::cout << "Book checked out." << std::endl;
@@ -174,10 +183,26 @@ void Menu::handleReturn()
     }
 
     Book& book = catalog.getBook(bookNum - 1);
-    if (member->returnBook(book.getTitle()))
+
+    int day = readInt("Return day: ");
+    int month = readInt("Return month: ");
+    int year = readInt("Return year: ");
+
+    if (!validateDate(day, month, year))
+    {
+        std::cout << "Invalid date." << std::endl;
+        return;
+    }
+
+    double fine = member->getFineForBook(book.getISBN(), day, month, year);
+
+    if (member->returnBook(book.getISBN()))
     {
         book.setAvailable(true);
         std::cout << "Book returned." << std::endl;
+        if (fine > 0.0)
+            std::cout << "Overdue fine: $" << std::fixed
+            << std::setprecision(2) << fine << std::endl;
     }
     else
     {
@@ -237,6 +262,11 @@ void Menu::run()
         case 5:
         {
             int id = readInt("Member ID: ");
+            if (findMember(id))
+            {
+                std::cout << "Member ID already exists." << std::endl;
+                break;
+            }
             std::string name = readString("Name: ");
             members.push_back(Member(id, name));
             std::cout << "Member registered." << std::endl;
