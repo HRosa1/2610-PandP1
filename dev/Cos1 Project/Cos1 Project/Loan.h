@@ -7,16 +7,16 @@ class Loan
     static constexpr double FINE_PER_DAY = 0.50;
 
 private:
-    std::string bookTitle;
+    std::string bookISBN;
     int memberId;
     int checkoutDay, checkoutMonth, checkoutYear;
     int dueDay, dueMonth, dueYear;
 
 public:
-    Loan(const std::string& bookTitle, int memberId,
+    Loan(const std::string& bookISBN, int memberId,
         int day, int month, int year);
 
-    std::string getBookTitle() const;
+    std::string getBookISBN() const;
     int getMemberId() const;
 
     void display() const;

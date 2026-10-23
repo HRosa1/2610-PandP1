@@ -20,9 +20,9 @@ static int toAbsoluteDays(int d, int m, int y)
     return y * 365 + y / 4 - y / 100 + y / 400 + mdays[m - 1] + leap + d;
 }
 
-Loan::Loan(const std::string& bookTitle, int memberId,
+Loan::Loan(const std::string& bookISBN, int memberId,
     int day, int month, int year)
-    : bookTitle(bookTitle), memberId(memberId),
+    : bookISBN(bookISBN), memberId(memberId),
     checkoutDay(day), checkoutMonth(month), checkoutYear(year),
     dueDay(day + LOAN_DAYS), dueMonth(month), dueYear(year)
 {
@@ -38,12 +38,12 @@ Loan::Loan(const std::string& bookTitle, int memberId,
     }
 }
 
-std::string Loan::getBookTitle() const { return bookTitle; }
+std::string Loan::getBookISBN() const { return bookISBN; }
 int Loan::getMemberId() const { return memberId; }
 
 void Loan::display() const
 {
-    std::cout << bookTitle
+    std::cout << bookISBN
         << " | Member ID: " << memberId
         << " | Checked out: " << checkoutMonth << "/" << checkoutDay << "/" << checkoutYear
         << " | Due: " << dueMonth << "/" << dueDay << "/" << dueYear
