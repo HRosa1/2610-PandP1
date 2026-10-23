@@ -58,7 +58,7 @@ void Catalog::displayAll() const
     }
 }
 
-Book& Catalog::getBook(int index)
+const Book& Catalog::getBook(int index) const
 {
     if (index < 0 || static_cast<size_t>(index) >= books.size())
         throw std::out_of_range("Invalid book index");

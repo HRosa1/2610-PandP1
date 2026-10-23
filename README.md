@@ -71,4 +71,67 @@ This week I addressed feedback from Milestone 2 and organized my remaining work 
 
 ### Week 4
 
-My final stand up...
+## 🔎 Overview
+
+This past week I completed the final features for ShelfLife Library and addressed all feedback from Week 3. Specifically, I:
+
+- Tightened `validateDate()` to reject impossible calendar dates
+  (e.g. Feb 31) using per-month day counts and leap-year logic.
+- Added a duplicate member ID check so the same ID can't be registered twice.
+- Refactored loans to be identified by **ISBN** instead of book title,
+  eliminating ambiguity when two books share a name.
+- Added overdue fine display during the **return** process, so fines are
+  shown and "collected" at the point of return.
+- Implemented **save/load to file** (`library.dat`) using a simple
+  pipe-delimited format for books, members, and active loans.
+
+The application is now feature-complete and ready for final submission.
+
+## 🧹 Project Wrap-Up
+
+Before submitting, I:
+
+- Cleaned up all `#include` directives and removed unused headers.
+- Verified every class compiles without warnings under `-Wall -Wextra`.
+- Tested edge cases: checking out a book already on loan, returning a
+  book not in the catalog, loading a file with missing members, and
+  date rollover across month/year boundaries.
+- Confirmed the save → exit → load cycle preserves all state correctly.
+- Updated all documentation to accurately reflect the ShelfLife Library
+  project (replacing earlier placeholder content).
+
+## 🧟 Challenges
+
+- **Date arithmetic** was the hardest part. Adding 14 days to a checkout
+  date required handling month-length rollover and leap years. I solved
+  this with a `toAbsoluteDays()` helper that converts any date to a
+  single integer, making comparisons and subtraction trivial.
+- **ISBN vs. title** refactoring touched four files simultaneously
+  (`Loan`, `Member`, `Menu`, and the constructor call sites). I worked
+  through it top-down (Loan → Member → Menu) to avoid breaking
+  intermediate states.
+- **File I/O format** — I initially considered JSON but settled on a
+  simple `TYPE|field|field` line format to keep parsing dependency-free
+  and readable in a text editor.
+
+## 🏆 Biggest Takeaway
+
+The most valuable thing I learned was **designing for testability from
+the start**. By passing "today's date" as a parameter to `isOverdue()`,
+`daysOverdue()`, and `getFine()` instead of reading the system clock,
+I could verify fine calculations with fixed inputs. That small decision
+saved me hours of debugging date-related bugs later in the project.
+
+## 🔮 Future Development
+
+If I continued this project, I would:
+
+- Add a **persistent fine ledger** so accumulated fines survive across
+  sessions and can be "paid" over time.
+- Support **multiple copies** of the same ISBN (a waiting list when
+  all copies are checked out).
+- Add a **search by partial match** (substring) for title and author.
+- Replace the flat-file format with a simple binary or CSV export for
+  spreadsheet compatibility.
+- Build a basic **command-line argument** parser so you can load a
+  specific data file on startup (`./shelflife -f mylibrary.dat`).   

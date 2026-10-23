@@ -15,6 +15,6 @@ public:
     int searchByAuthor(const std::string& author) const;
     int searchByISBN(const std::string& isbn) const;
     void displayAll() const;
-    Book& getBook(int index);
+    const Book& getBook(int index) const;
     int getCount() const;
 };
