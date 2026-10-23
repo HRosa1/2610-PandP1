@@ -1,8 +1,9 @@
 #include "Book.h"
 #include <iostream>
 
-Book::Book(const std::string& title, const std::string& author, const std::string& isbn)
-    : title(title), author(author), isbn(isbn), available(true)
+Book::Book(const std::string& title, const std::string& author,
+    const std::string& isbn, bool available)
+    : title(title), author(author), isbn(isbn), available(available)
 {
 }
 

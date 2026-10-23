@@ -6,6 +6,20 @@
 #include <vector>
 #include <stdexcept>
 #include <iomanip>
+#include <fstream>
+
+static std::vector<std::string> split(const std::string& s, char delim)
+{
+    std::vector<std::string> result;
+    std::string token;
+    for (char c : s)
+    {
+        if (c == delim) { result.push_back(token); token.clear(); }
+        else token += c;
+    }
+    result.push_back(token);
+    return result;
+}
 
 Menu::Menu(Catalog& catalog) : catalog(catalog)
 {
@@ -233,6 +247,72 @@ void Menu::handleShowLoans()
     member->displayLoans(day, month, year);
 }
 
+void Menu::handleSave()
+{
+    std::ofstream out("library.dat");
+    if (!out)
+    {
+        std::cout << "Could not open file for writing." << std::endl;
+        return;
+    }
+
+    for (int i = 0; i < catalog.getCount(); i++)
+    {
+        const Book& b = catalog.getBook(i);
+        out << "BOOK|" << b.getTitle() << "|"
+            << b.getAuthor() << "|"
+            << b.getISBN() << "|"
+            << (b.isAvailable() ? 1 : 0) << "\n";
+    }
+
+    for (const auto& m : members)
+    {
+        out << "MEMBER|" << m.getId() << "|" << m.getName() << "\n";
+        m.saveLoans(out);
+    }
+
+    std::cout << "Library saved to library.dat" << std::endl;
+}
+
+void Menu::handleLoad()
+{
+    std::ifstream in("library.dat");
+    if (!in)
+    {
+        std::cout << "Could not open library.dat" << std::endl;
+        return;
+    }
+
+    std::string line;
+    while (std::getline(in, line))
+    {
+        auto f = split(line, '|');
+        if (f.empty()) continue;
+
+        if (f[0] == "BOOK" && f.size() == 5)
+        {
+            catalog.addBook(Book(f[1], f[2], f[3], f[4] == "1"));
+        }
+        else if (f[0] == "MEMBER" && f.size() == 3)
+        {
+            members.push_back(Member(std::stoi(f[1]), f[2]));
+        }
+        else if (f[0] == "LOAN" && f.size() == 6)
+        {
+            int id = std::stoi(f[2]);
+            Member* m = findMember(id);
+            if (m)
+            {
+                Loan loan(f[1], id, std::stoi(f[3]),
+                    std::stoi(f[4]), std::stoi(f[5]));
+                m->checkOut(loan);
+            }
+        }
+    }
+
+    std::cout << "Library loaded." << std::endl;
+}
+
 void Menu::run()
 {
     bool running = true;
@@ -248,6 +328,8 @@ void Menu::run()
             << "6. Check out book\n"
             << "7. Return book\n"
             << "8. Show member's loans\n"
+            << "9. Save to file\n"
+            << "10. Load from file\n"
             << "0. Exit\n"
             << "Choice: ";
 
@@ -275,6 +357,8 @@ void Menu::run()
         case 6:  handleCheckout(); break;
         case 7:  handleReturn(); break;
         case 8:  handleShowLoans(); break;
+        case 9:  handleSave(); break;
+        case 10: handleLoad(); break;
         case 0:  running = false; std::cout << "Goodbye!" << std::endl; break;
         default: std::cout << "Invalid choice." << std::endl; break;
         }

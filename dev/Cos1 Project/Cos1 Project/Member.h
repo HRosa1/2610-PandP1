@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "Loan.h"
+#include <iostream>
 
 class Member
 {
@@ -22,4 +23,7 @@ public:
         int todayDay, int todayMonth, int todayYear) const;
     void displayLoans(int todayDay, int todayMonth, int todayYear) const;
     int getLoanCount() const;
+
+    void saveLoans(std::ostream& out) const;
+    void loadLoans(std::istream& in);
 };

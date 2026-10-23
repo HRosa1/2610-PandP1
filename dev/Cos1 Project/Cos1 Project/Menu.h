@@ -21,6 +21,9 @@ private:
     void handleCheckout();
     void handleReturn();
     void handleShowLoans();
+    
+    void handleSave();
+    void handleLoad();
 
 public:
     explicit Menu(Catalog& catalog);

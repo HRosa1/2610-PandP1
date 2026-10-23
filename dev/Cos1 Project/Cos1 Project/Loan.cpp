@@ -41,6 +41,10 @@ Loan::Loan(const std::string& bookISBN, int memberId,
 std::string Loan::getBookISBN() const { return bookISBN; }
 int Loan::getMemberId() const { return memberId; }
 
+int Loan::getCheckoutDay() const { return checkoutDay; }
+int Loan::getCheckoutMonth() const { return checkoutMonth; }
+int Loan::getCheckoutYear() const { return checkoutYear; }
+
 void Loan::display() const
 {
     std::cout << bookISBN

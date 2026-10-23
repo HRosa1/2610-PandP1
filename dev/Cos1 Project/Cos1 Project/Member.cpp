@@ -68,3 +68,20 @@ void Member::displayLoans(int todayDay, int todayMonth, int todayYear) const
 }
 
 int Member::getLoanCount() const { return static_cast<int>(loans.size()); }
+
+void Member::saveLoans(std::ostream& out) const
+{
+    for (const auto& loan : loans)
+    {
+        out << "LOAN|" << loan.getBookISBN() << "|"
+            << loan.getMemberId() << "|"
+            << loan.getCheckoutDay() << "|"
+            << loan.getCheckoutMonth() << "|"
+            << loan.getCheckoutYear() << "\n";
+    }
+}
+
+void Member::loadLoans(std::istream& in)
+{
+
+}

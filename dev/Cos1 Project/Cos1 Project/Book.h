@@ -10,7 +10,8 @@ private:
     bool available;
 
 public:
-    Book(const std::string& title, const std::string& author, const std::string& isbn);
+    Book(const std::string& title, const std::string& author,
+        const std::string& isbn, bool available = true);
 
     void display() const;
     std::string getTitle() const;

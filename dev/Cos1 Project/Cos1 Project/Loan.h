@@ -23,4 +23,8 @@ public:
     bool isOverdue(int todayDay, int todayMonth, int todayYear) const;
     int daysOverdue(int todayDay, int todayMonth, int todayYear) const;
     double getFine(int todayDay, int todayMonth, int todayYear) const;
+
+    int getCheckoutDay() const;
+    int getCheckoutMonth() const;
+    int getCheckoutYear() const;
 };
